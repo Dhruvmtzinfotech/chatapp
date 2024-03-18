@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
-import 'package:package_info_plus/package_info_plus.dart';
 
 Future? apiDialog(String msg) {
   return Get.dialog(
@@ -20,10 +19,10 @@ Future? apiDialog(String msg) {
   );
 }
 
-Future<String?> getVersion() async {
-  String? version;
-  await PackageInfo.fromPlatform().then((PackageInfo packageInfo) {
-    version = packageInfo.version;
-  });
-  return version;
-}
+// Future<String?> getVersion() async {
+//   String? version;
+//   await PackageInfo.fromPlatform().then((PackageInfo packageInfo) {
+//     version = packageInfo.version;
+//   });
+//   return version;
+// }

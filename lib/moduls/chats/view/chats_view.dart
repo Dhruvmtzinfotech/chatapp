@@ -21,15 +21,11 @@ class _ChatsViewState extends State<ChatsView> {
   final ImagePicker picker = ImagePicker();
   File? selectedFile;
 
-   //final _messagingService = MessagingService();
-
-
 
   @override
   void initState() {
     super.initState();
     homeCon.getSenderId();
-     //_messagingService.init(context);
   }
 
   @override
@@ -272,7 +268,6 @@ class _ChatsViewState extends State<ChatsView> {
                           if(message.length!=0)
                             {
                               chatsCon.messageController.clear();
-
                               await FirebaseFirestore.instance.collection("user").doc(homeCon.senderId.value)
                                   .collection("chats").doc(chatsCon.receiverId.value).collection("message").add({
                                 "senderId":homeCon.senderId.value,
@@ -288,18 +283,22 @@ class _ChatsViewState extends State<ChatsView> {
                                   "message":message,
                                   "type":"text",
                                   "datetime":DateTime.now().millisecondsSinceEpoch
-                                }).then((value) async {
+                                }).then((value) async
+                                {
                                   await chatsCon.api.sendPushNotification(
-                                    title: "this is text",
-                                    body: "this is body",
-                                    to:chatsCon.receiverId.value
+                                    title: homeCon.name.value,// send name
+                                    body:  chatsCon.name.value,// receive name
+                                    to:chatsCon.token.value
                                   )!.then((value) async{
                                     if(chatsCon.isLoading.value = true) {
+                                     // AppTheme.getSnackBar(message: "Send message Successfully",color:Colors.green);
                                     }
                                     else {
+                                      //AppTheme.getSnackBar(message: "Send message UnSuccessfully",color: Colors.red);
                                     }
                                   });
-                                });
+                                }
+                                );
                               });
                             }
                         },

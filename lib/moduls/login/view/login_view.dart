@@ -1,3 +1,4 @@
+import 'package:chatapp/moduls/login/view/phone_view.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -76,31 +77,31 @@ class _LoginViewState extends State<LoginView> {
                         ),
                         SizedBox(height: 20,),
                         Button(btnText: "Login", onClick: () async{
-                         if(loginCon.email.text.isEmpty || loginCon.password.text.isEmpty){
-                           AppTheme.getSnackBar(message: "Enter Reqiured Field");
-                         }
-                         else{
-                          await loginCon.api.getUserLogin(
-                            email:loginCon.email.text,
-                            password: loginCon.password.text,
-                          )!.then((value) async{
-                            if(loginCon.isLogin.value = true)
-                              {
-                                AppTheme.getSnackBar(message: value['message']);
-                                SharedPreferences prefs = await SharedPreferences.getInstance();
-                                prefs.setString('isLogin','yes');
-                              }
-                            else
-                              {
-                                AppTheme.getSnackBar(message: value['message']);
-                              }
-                            loginCon.email.clear();
-                            loginCon.password.clear();
-                            Get.back();
-                            Get.offAllNamed(Routes.home);
-                          });
-
-                         }
+                         // if(loginCon.email.text.isEmpty || loginCon.password.text.isEmpty){
+                         //   AppTheme.getSnackBar(message: "Enter Reqiured Field");
+                         // }
+                         // else{
+                         //  await loginCon.api.getUserLogin(
+                         //    email:loginCon.email.text,
+                         //    password: loginCon.password.text,
+                         //  )!.then((value) async{
+                         //    if(loginCon.isLogin.value = true)
+                         //      {
+                         //        AppTheme.getSnackBar(message: value['message']);
+                         //        SharedPreferences prefs = await SharedPreferences.getInstance();
+                         //        prefs.setString('isLogin','yes');
+                         //      }
+                         //    else
+                         //      {
+                         //        AppTheme.getSnackBar(message: value['message']);
+                         //      }
+                         //    loginCon.email.clear();
+                         //    loginCon.password.clear();
+                         //    Get.back();
+                         //    Get.offAllNamed(Routes.home);
+                         //  });
+                         //
+                         // }
 
                         }),
                         SizedBox(height: 20,),
@@ -122,8 +123,6 @@ class _LoginViewState extends State<LoginView> {
                             var email = user.email.toString();
                             var photo = user.photoURL.toString();
 
-                            print(email);
-
                             SharedPreferences prefs = await SharedPreferences.getInstance();
                             prefs.setString("name", name);
                             prefs.setString("isLogin", "yes");
@@ -137,18 +136,16 @@ class _LoginViewState extends State<LoginView> {
                               "name":name,
                               "email":email,
                               "photo":photo,
+                                "token":prefs.getString("token").toString()
                               }).then((documents) async{
-
                                 SharedPreferences prefs = await SharedPreferences.getInstance();
                                 prefs.setString("senderId", documents.id.toString());
                                 print("senderId${documents.id.toString()}");
-
                                 Get.offAllNamed(Routes.home);
                               });
                                 }
                               else
                               {
-
                                 SharedPreferences prefs = await SharedPreferences.getInstance();
                                 prefs.setString("senderId", documents.docs.first.id.toString());
 
@@ -202,29 +199,29 @@ class _LoginViewState extends State<LoginView> {
                         //   ),
                         // ),
                         // SizedBox(height: 20,),
-                        // GestureDetector(onTap: () async {
-                        //
-                        // },
-                        //   child: Container(
-                        //     width:width * 82,
-                        //     decoration: BoxDecoration(
-                        //       color: Colors.grey.shade200,
-                        //       borderRadius: BorderRadius.circular(20.0),
-                        //     ),
-                        //     child: Row(
-                        //       children: [
-                        //         Padding(
-                        //           padding: const EdgeInsets.all(15.0),
-                        //           child: Image.asset("assets/img/phone.png",height:30),
-                        //         ),
-                        //         Text("Continue with Phone",style: TextStyle(
-                        //           fontWeight: FontWeight.bold,
-                        //           fontSize: 20.0,
-                        //         )),
-                        //       ],
-                        //     ),
-                        //   ),
-                        // ),
+                        GestureDetector(onTap: () async {
+                          Get.to(() => PhoneView());
+                        },
+                          child: Container(
+                            width:width * 82,
+                            decoration: BoxDecoration(
+                              color: Colors.grey.shade200,
+                              borderRadius: BorderRadius.circular(20.0),
+                            ),
+                            child: Row(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(15.0),
+                                  child: Image.asset("assets/img/phone.png",height:30),
+                                ),
+                                Text("Continue with Phone",style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 20.0,
+                                )),
+                              ],
+                            ),
+                          ),
+                        ),
                       ],
                     ),
                   ),

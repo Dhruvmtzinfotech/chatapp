@@ -28,8 +28,6 @@ class _HomeViewState extends State<HomeView> {
 
   @override
   Widget build(BuildContext context) {
-     double height = MediaQuery.of(context).size.height * 100;
-     double width = MediaQuery.of(context).size.width * 100;
     return Scaffold(
       drawer: Drawer(
         child: ListView(
@@ -119,18 +117,19 @@ class _HomeViewState extends State<HomeView> {
                                 var name = document["name"].toString();
                                 var email = document["email"].toString();
                                 var photo = document["photo"].toString();
-
+                                var token = document["token"].toString();
+                                print("Mytoken--------"+token);
                                 Get.to(() => ChatsView(), arguments: {
                                   'name': name,
                                   'email': email,
                                   'photo': photo,
-                                  'receiverId':document.id.toString()
+                                  'token':token,
+                                  'receiverId':document.id.toString(),
                                 });
                               },
                             );
                           }).toList(),
                         );
-
                       }
                     }
                     else
@@ -141,7 +140,6 @@ class _HomeViewState extends State<HomeView> {
                     }
                   }
               );
-
             })
           ],
         ),

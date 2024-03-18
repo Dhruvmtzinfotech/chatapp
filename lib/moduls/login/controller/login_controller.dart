@@ -6,6 +6,10 @@ class LoginController extends GetxController {
 
   TextEditingController email = TextEditingController();
   TextEditingController password = TextEditingController();
+  TextEditingController mobileController = TextEditingController();
+  TextEditingController otpController = TextEditingController();
+
+
 
   Api api = Api();
 

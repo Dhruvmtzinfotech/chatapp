@@ -42,13 +42,29 @@ class AppTheme
     );
   }
 
-  static getSnackBar({required String message})
+  static getSnackBar({required String message,required Color color})
   {
     Get.showSnackbar(GetSnackBar(
       message: message,
       duration: Duration(seconds: 2),
       snackPosition: SnackPosition.BOTTOM,
       borderRadius: 30,
+      backgroundColor: color,
     ));
+  }
+
+  static customTextfield(TextEditingController controller,String text,IconData iconData,bool toHide) async
+  {
+    return TextField(
+      controller: controller,
+      obscureText: toHide,
+      decoration: InputDecoration(
+        hintText: text,
+          suffixIcon: Icon(iconData),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(20.0),
+          )
+      ),
+    );
   }
 }

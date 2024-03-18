@@ -1,6 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
-import 'dart:io';
 import 'package:chatapp/api/widget.dart';
 import 'package:chatapp/utils/constrants.dart';
 import 'package:dio/dio.dart';
@@ -61,8 +59,7 @@ class Api{
   }
 
   Future? sendPushNotification({String? title, String? body, String? to }) async {
-    Map<String,dynamic> map = {"title":title,"body":body,"to":to};
-
+    Map<String,dynamic> map = {"notification":{"title":title,"body":body},"to":to};
     String requestBody = jsonEncode(map);
 
     try {
@@ -81,8 +78,8 @@ class Api{
       print('Response status: ${response.statusCode}');
       print('Response body: ${response.data}');
     }
-    on DioException catch (e) {
-      print('sendPushNotificationE: $e');
+    on DioException catch (ex) {
+      print('sendPushNotificationE: $ex');
     }
   }
 

@@ -22,19 +22,18 @@ class ChatsController extends GetxController {
   RxString email="".obs;
   RxString photo="".obs;
   RxString receiverId="".obs;
+  RxString token="".obs;
+
 
   @override
   void onInit() {
     super.onInit();
-    // getSenderId();
     final arguments = Get.arguments;
     name.value = arguments['name'];
     email.value = arguments['email'];
     photo.value = arguments['photo'];
     receiverId.value = arguments['receiverId'];
+    token.value = arguments['token'];
   }
-
-
-
 
 }

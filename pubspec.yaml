@@ -23,8 +23,6 @@ dependencies:
   uuid: ^4.3.3
   emoji_picker_flutter: ^2.1.0
   image_picker: ^1.0.7
-  package_info_plus: ^5.0.1
-  flutter_notification_channel: ^3.0.0
 
 
 

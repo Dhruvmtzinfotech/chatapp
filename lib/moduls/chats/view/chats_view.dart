@@ -7,8 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
-import '../../../services/notification.dart';
-
 
 class ChatsView extends StatefulWidget {
   const ChatsView({super.key});
@@ -23,7 +21,7 @@ class _ChatsViewState extends State<ChatsView> {
   final ImagePicker picker = ImagePicker();
   File? selectedFile;
 
-  final _messagingService = MessagingService();
+   //final _messagingService = MessagingService();
 
 
 
@@ -31,7 +29,7 @@ class _ChatsViewState extends State<ChatsView> {
   void initState() {
     super.initState();
     homeCon.getSenderId();
-    _messagingService.init(context);
+     //_messagingService.init(context);
   }
 
   @override
@@ -160,7 +158,7 @@ class _ChatsViewState extends State<ChatsView> {
                                             var id = DateTime.now().microsecondsSinceEpoch.toString();
                                             try {
                                               TaskSnapshot uploadTask = await FirebaseStorage.instance
-                                                  .ref('camera/camera$id') // Folder named "images"
+                                                  .ref('camera/camera$id') // Folder nam  ed "images"
                                                   .putFile(selectedFile);
                                               String imageUrl = await uploadTask.ref.getDownloadURL();
                                               await FirebaseFirestore.instance
@@ -256,7 +254,6 @@ class _ChatsViewState extends State<ChatsView> {
                                               setState(() {
                                                 chatsCon.isLoading.value = false;
                                               });
-                                              // Show a snackbar or dialog to inform the user about the error.
                                             }
                                           },
                                         ),
@@ -291,8 +288,17 @@ class _ChatsViewState extends State<ChatsView> {
                                   "message":message,
                                   "type":"text",
                                   "datetime":DateTime.now().millisecondsSinceEpoch
-                                }).then((value){
-
+                                }).then((value) async {
+                                  await chatsCon.api.sendPushNotification(
+                                    title: "this is text",
+                                    body: "this is body",
+                                    to:chatsCon.receiverId.value
+                                  )!.then((value) async{
+                                    if(chatsCon.isLoading.value = true) {
+                                    }
+                                    else {
+                                    }
+                                  });
                                 });
                               });
                             }
@@ -303,29 +309,6 @@ class _ChatsViewState extends State<ChatsView> {
                         padding: EdgeInsets.all(15),
                         shape: CircleBorder(),
                       ),
-                      // Offstage(
-                      //   offstage: chatsCon.emojiShowing.value,
-                      //   child: EmojiPicker(
-                      //     textEditingController: chatsCon.messageController,
-                      //     scrollController: chatsCon.scrollController,
-                      //     config: Config(
-                      //       height: 256,
-                      //       checkPlatformCompatibility: true,
-                      //       emojiViewConfig: EmojiViewConfig(
-                      //         emojiSizeMax: 28 *
-                      //             (foundation.defaultTargetPlatform ==
-                      //                 TargetPlatform.iOS
-                      //                 ? 1.2
-                      //                 : 1.0),
-                      //       ),
-                      //       swapCategoryAndBottomBar: false,
-                      //       skinToneConfig: const SkinToneConfig(),
-                      //       categoryViewConfig: const CategoryViewConfig(),
-                      //       bottomActionBarConfig: const BottomActionBarConfig(),
-                      //       searchViewConfig: const SearchViewConfig(),
-                      //     ),
-                      //   ),
-                      // ),
                     ],
                   ),
                 ],

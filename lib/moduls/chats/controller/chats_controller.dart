@@ -1,3 +1,4 @@
+import 'package:chatapp/api/api.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
@@ -5,7 +6,9 @@ class ChatsController extends GetxController {
 
 
   TextEditingController messageController = TextEditingController();
-  ScrollController scrollController =  ScrollController();
+  // ScrollController scrollController =  ScrollController();
+
+  Api api = Api();
 
   RxBool isLoading = false.obs;
   RxBool emojiShowing = false.obs;

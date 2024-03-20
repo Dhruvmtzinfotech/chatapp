@@ -118,12 +118,14 @@ class _HomeViewState extends State<HomeView> {
                                 var email = document["email"].toString();
                                 var photo = document["photo"].toString();
                                 var token = document["token"].toString();
-                                print("Mytoken--------"+token);
+                               // var online = document["online"].toString();
+                               // print("MyToken--------"+token);
                                 Get.to(() => ChatsView(), arguments: {
                                   'name': name,
                                   'email': email,
                                   'photo': photo,
                                   'token':token,
+                                 // 'user':online,
                                   'receiverId':document.id.toString(),
                                 });
                               },

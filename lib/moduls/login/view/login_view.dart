@@ -20,6 +20,8 @@ class LoginView extends StatefulWidget {
 class _LoginViewState extends State<LoginView> {
   LoginController loginCon = Get.put(LoginController());
   final FirebaseAuth auth = FirebaseAuth.instance;
+  bool online = true;
+
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height * 100;
@@ -136,12 +138,15 @@ class _LoginViewState extends State<LoginView> {
                               "name":name,
                               "email":email,
                               "photo":photo,
-                                "token":prefs.getString("token").toString()
+                                "token":prefs.getString("token").toString(),
+                                // "online":false
                               }).then((documents) async{
                                 SharedPreferences prefs = await SharedPreferences.getInstance();
                                 prefs.setString("senderId", documents.id.toString());
                                 print("senderId${documents.id.toString()}");
+
                                 Get.offAllNamed(Routes.home);
+
                               });
                                 }
                               else
@@ -199,29 +204,29 @@ class _LoginViewState extends State<LoginView> {
                         //   ),
                         // ),
                         // SizedBox(height: 20,),
-                        GestureDetector(onTap: () async {
-                          Get.to(() => PhoneView());
-                        },
-                          child: Container(
-                            width:width * 82,
-                            decoration: BoxDecoration(
-                              color: Colors.grey.shade200,
-                              borderRadius: BorderRadius.circular(20.0),
-                            ),
-                            child: Row(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.all(15.0),
-                                  child: Image.asset("assets/img/phone.png",height:30),
-                                ),
-                                Text("Continue with Phone",style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 20.0,
-                                )),
-                              ],
-                            ),
-                          ),
-                        ),
+                        // GestureDetector(onTap: () async {
+                        //   Get.to(() => PhoneView());
+                        // },
+                        //   child: Container(
+                        //     width:width * 82,
+                        //     decoration: BoxDecoration(
+                        //       color: Colors.grey.shade200,
+                        //       borderRadius: BorderRadius.circular(20.0),
+                        //     ),
+                        //     child: Row(
+                        //       children: [
+                        //         Padding(
+                        //           padding: const EdgeInsets.all(15.0),
+                        //           child: Image.asset("assets/img/phone.png",height:30),
+                        //         ),
+                        //         Text("Continue with Phone",style: TextStyle(
+                        //           fontWeight: FontWeight.bold,
+                        //           fontSize: 20.0,
+                        //         )),
+                        //       ],
+                        //     ),
+                        //   ),
+                        // ),
                       ],
                     ),
                   ),

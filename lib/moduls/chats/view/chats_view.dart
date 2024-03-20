@@ -83,7 +83,7 @@ class _ChatsViewState extends State<ChatsView> {
                                     padding: EdgeInsets.all(10.0),
                                     child: (document["type"]=="image")?Image.network(document["message"].toString(),width: 200,):Text(document["message"].toString(),style: TextStyle(color: Colors.white),),
                                     decoration: BoxDecoration(
-                                        color: Color(0xff20A090),
+                                        color: Color(0xff15c0ab),
                                         borderRadius: BorderRadius.circular(15.0)
                                     ),
                                   ),
@@ -124,15 +124,15 @@ class _ChatsViewState extends State<ChatsView> {
                               children: [
                                 TextField(
                                   controller: chatsCon.messageController,
+                                  scrollController: chatsCon.scrollController,
                                   decoration: InputDecoration(
                                     border: InputBorder.none,
                                     hintText: 'Type a Message',
                                     prefixIcon: GestureDetector(
                                         onTap: () async{
-                                          // setState(() {
-                                          //   FocusManager.instance.primaryFocus?.unfocus();
-                                          //   chatsCon.emojiShowing.value = chatsCon.emojiShowing.value;
-                                          // });
+                                          setState(() {
+                                            chatsCon.emojiShowing.value = !chatsCon.emojiShowing.value;
+                                          });
                                         },
                                         child: Icon(Icons.emoji_emotions_outlined)),
                                     suffixIcon: Row(
@@ -268,6 +268,11 @@ class _ChatsViewState extends State<ChatsView> {
                           if(message.length!=0)
                             {
                               chatsCon.messageController.clear();
+                              chatsCon.scrollController.animateTo(
+                                chatsCon.scrollController.position.minScrollExtent,
+                                curve: Curves.easeInOut,
+                                duration: const Duration(milliseconds: 1),
+                              );
                               await FirebaseFirestore.instance.collection("user").doc(homeCon.senderId.value)
                                   .collection("chats").doc(chatsCon.receiverId.value).collection("message").add({
                                 "senderId":homeCon.senderId.value,
@@ -275,6 +280,7 @@ class _ChatsViewState extends State<ChatsView> {
                                 "message":message,
                                 "type":"text",
                                 "datetime":DateTime.now().millisecondsSinceEpoch,
+                                "timestamp":Timestamp
                               }).then((value) async{
                                 await FirebaseFirestore.instance.collection("user").doc(chatsCon.receiverId.value)
                                     .collection("chats").doc(homeCon.senderId.value).collection("message").add({
@@ -282,12 +288,13 @@ class _ChatsViewState extends State<ChatsView> {
                                   "receiverId":chatsCon.receiverId.value,
                                   "message":message,
                                   "type":"text",
-                                  "datetime":DateTime.now().millisecondsSinceEpoch
+                                  "datetime":DateTime.now().millisecondsSinceEpoch,
+                                  "timestamp":Timestamp
                                 }).then((value) async
                                 {
                                   await chatsCon.api.sendPushNotification(
                                     title: homeCon.name.value,// send name
-                                    body:  chatsCon.name.value,// receive name
+                                    body: chatsCon.name.value,// receive name
                                     to:chatsCon.token.value
                                   )!.then((value) async{
                                     if(chatsCon.isLoading.value = true) {
@@ -301,6 +308,7 @@ class _ChatsViewState extends State<ChatsView> {
                                 );
                               });
                             }
+
                         },
                         color: Colors.green,
                         textColor: Colors.white,
@@ -308,6 +316,27 @@ class _ChatsViewState extends State<ChatsView> {
                         padding: EdgeInsets.all(15),
                         shape: CircleBorder(),
                       ),
+                      // Expanded(
+                      //   child: Offstage(
+                      //     offstage: !chatsCon.emojiShowing.value,
+                      //     child: SizedBox(
+                      //       height: 200,
+                      //       child: EmojiPicker(
+                      //         textEditingController: chatsCon.messageController,
+                      //         scrollController: chatsCon.scrollController,
+                      //         config: Config(
+                      //           height: 256,
+                      //           checkPlatformCompatibility: true,
+                      //           swapCategoryAndBottomBar: false,
+                      //           skinToneConfig: SkinToneConfig(),
+                      //           categoryViewConfig: CategoryViewConfig(),
+                      //           bottomActionBarConfig: BottomActionBarConfig(),
+                      //           searchViewConfig: SearchViewConfig(),
+                      //         ),
+                      //       ),
+                      //     ),
+                      //   ),
+                      // ),
                     ],
                   ),
                 ],

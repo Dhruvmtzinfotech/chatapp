@@ -33,7 +33,7 @@ class MyApp extends StatelessWidget {
       },
       child: GetMaterialApp(
         debugShowCheckedModeBanner: false,
-        initialRoute: Routes.login,
+        initialRoute: Routes.home,
         getPages: Routes.getPages,
       ),
     );

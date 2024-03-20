@@ -83,8 +83,36 @@ class Api{
     }
   }
 
+  // String getTimeDifferenceString(int timestamp) {
+  //   DateTime now = DateTime.now();
+  //   DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(timestamp);
+  //
+  //   Duration difference = now.difference(dateTime);
+  //   if (difference.inSeconds < 60) {
+  //     return 'Just now';
+  //   } else if (difference.inMinutes < 2) {
+  //     return '1 min ago';
+  //   } else if (difference.inDays < 31) {
+  //     return '${difference.inDays} days ago';
+  //   } else {
+  //     DateFormat formatter = DateFormat('DD MMM yyyy');
+  //     return formatter.format(dateTime);
+  //   }
+  // }
+
+  // void main() {
+  //   int timestampJustNow = DateTime.now().millisecondsSinceEpoch;
+  //   int timestamp1MinAgo = DateTime.now().subtract(Duration(minutes: 1)).millisecondsSinceEpoch;
+  //   int timestamp1MonthAgo = DateTime.now().subtract(Duration(days: 30)).millisecondsSinceEpoch;
+  //
+  //   print(getTimeDifferenceString(timestampJustNow));
+  //   print(getTimeDifferenceString(timestamp1MinAgo));
+  //   print(getTimeDifferenceString(timestamp1MonthAgo));
+  // }
 
 }
+
+
 
 // final body = {
 //   "to": chatUser.pushToken,

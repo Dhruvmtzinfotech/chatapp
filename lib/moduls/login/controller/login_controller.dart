@@ -10,6 +10,16 @@ class LoginController extends GetxController {
   TextEditingController otpController = TextEditingController();
 
 
+  // RxString verificationId = "".obs;
+  //
+  // @override
+  // void onInit() {
+  //   super.onInit();
+  //   final arguments = Get.arguments();
+  //   verificationId.value = arguments['verificationId'];
+  // }
+
+
 
   Api api = Api();
 
@@ -24,9 +34,6 @@ class LoginController extends GetxController {
     passwordVisible.value = !passwordVisible.value;
   }
 
-
-
-
-
-
 }
+
+

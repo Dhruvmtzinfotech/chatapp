@@ -2,15 +2,12 @@ import 'package:chatapp/routes/app_routes.dart';
 import 'package:chatapp/utils/apptheme.dart';
 import 'package:chatapp/widgets/button.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-
 import '../controller/login_controller.dart';
 
 class OtpView extends StatefulWidget {
-  String verificationid;
-  OtpView({required this.verificationid});
 
   @override
   State<OtpView> createState() => _OtpViewState();
@@ -39,20 +36,22 @@ class _OtpViewState extends State<OtpView> {
 
               AppTheme.customTextfield(loginCon.otpController, "Enter otp", (Icons.output), false),
               SizedBox(height: 30.0),
-              Button(btnText: "Verify", onClick: () async{
-                try {
-                  PhoneAuthCredential credential = PhoneAuthProvider.credential(
-                    verificationId: widget.verificationid,
-                    smsCode: loginCon.otpController.text.toString(),
-                  );
-                  UserCredential userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
-                 Get.offAllNamed(Routes.home);
-                }
-                catch (ex)
-                {
-                  print('Verification failed: $ex');
-                }
-              })
+              // Button(btnText: "Verify", onClick: () async{
+              //
+              //   try {
+              //     PhoneAuthCredential credential = PhoneAuthProvider.credential(
+              //       verificationId: loginCon.verificationId.value,
+              //       smsCode: loginCon.otpController.text.toString(),
+              //     );
+              //     UserCredential userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
+              //    Get.offAllNamed(Routes.home);
+              //   }
+              //   catch (ex){
+              //     if (kDebugMode) {
+              //       print('Verification failed: $ex');
+              //     }
+              //   }
+              // })
             ],
           ),
         ),

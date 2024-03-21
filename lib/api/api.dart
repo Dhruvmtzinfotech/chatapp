@@ -3,6 +3,7 @@ import 'package:chatapp/api/widget.dart';
 import 'package:chatapp/utils/constrants.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
+import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../utils/helper.dart';
 
@@ -110,15 +111,51 @@ class Api{
   //   print(getTimeDifferenceString(timestamp1MonthAgo));
   // }
 
+
+  // Online/Offline
+
+//   class UserPresenceService {
+//   final FirebaseAuth _auth = FirebaseAuth.instance;
+//   final CollectionReference _presenceCollection = FirebaseFirestore.instance.collection('user');
+//
+//   Future<void> setUserOnline() async {
+//   final User? user = _auth.currentUser;
+//   if (user != null) {
+//   await _presenceCollection.doc(user.uid).set({
+//   'isOnline': true,
+//   'lastSeen': DateTime.now(),
+//   });
+//   }
+//   }
+//
+//   Future<void> setUserOffline() async {
+//   final User? user = _auth.currentUser;
+//   if (user != null) {
+//   await _presenceCollection.doc(user.uid).set({
+//   'isOnline': false,
+//   'lastSeen': DateTime.now(),
+//   });
+//   }
+//   }
+//
+//   Stream<DocumentSnapshot> getUserPresenceStream(String userId) {
+//   return _presenceCollection.doc(userId).snapshots();
+//   }
+//   }
+//
+// // Usage
+//   void main() async {
+//   UserPresenceService presenceService = UserPresenceService();
+//
+//   await presenceService.setUserOnline();
+//
+//   String userId = FirebaseAuth.instance.currentUser!.uid;
+//   Stream<DocumentSnapshot> userPresenceStream = presenceService.getUserPresenceStream(userId);
+//   userPresenceStream.listen((DocumentSnapshot snapshot) {
+//   bool isOnline = snapshot['isOnline'];
+//   print('User is ${isOnline ? 'online' : 'offline'}');
+//   });
+//   }
+
 }
 
-
-
-// final body = {
-//   "to": chatUser.pushToken,
-//   "notification": {
-//     "title": name,
-//     "body": msg,
-//     "android_channel_id": "chats"
-//   },
-// };

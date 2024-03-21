@@ -56,12 +56,24 @@ dependencies:
   # for show dataTime Format
   intl: ^0.19.0
 
+  # for appIcon set
+  flutter_launcher_icons: ^0.11.0
 
+  # for appName set
+  flutter_app_name: ^0.1.0
 
 dev_dependencies:
+  build_runner:
+  flutter_lints:
   flutter_test:
     sdk: flutter
-
+flutter_launcher_icons: any
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/img/chatIcon.png"
+flutter_app_name:
+  name: "chatApp"
 
   flutter_lints: ^2.0.0
 flutter:

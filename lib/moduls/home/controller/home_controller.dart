@@ -24,14 +24,40 @@ class HomeController extends GetxController {
   Future<void> getSenderId() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     senderId.value = prefs.getString("senderId") ?? "";
-    // print("SenderId_________${senderId}");
+     print("SenderId_________${senderId}");
   }
-
   @override
   void onInit() {
     super.onInit();
     getSenderId();
   }
+
+  //
+  // final FirebaseAuth auth = FirebaseAuth.instance;
+  // final FirebaseFirestore _fireStore = FirebaseFirestore.instance;
+  //
+  //
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   WidgetsBinding.instance.addObserver(this);
+  //   setStatus("online");
+  // }
+  //
+  // void setStatus(String status) async {
+  //   await _fireStore.collection('user').doc(auth.currentUser!.uid).update({
+  //     "status": status,
+  //   });
+  // }
+  //
+  // @override
+  // void didChangeAppLifecycleState(AppLifecycleState state) {
+  //   if (state == AppLifecycleState.resumed) {
+  //     setStatus("Online");
+  //   } else {
+  //     setStatus("Offline");
+  //   }
+  // }
 
 
 }

@@ -15,17 +15,38 @@ class ChatsView extends StatefulWidget {
   State<ChatsView> createState() => _ChatsViewState();
 }
 
-class _ChatsViewState extends State<ChatsView> {
+class _ChatsViewState extends State<ChatsView> with WidgetsBindingObserver{
   HomeController homeCon = Get.put(HomeController());
   ChatsController chatsCon = Get.put(ChatsController());
   final ImagePicker picker = ImagePicker();
   File? selectedFile;
 
 
+  // final FirebaseAuth auth = FirebaseAuth.instance;
+  // final FirebaseFirestore _fireStore = FirebaseFirestore.instance;
+  //
+  //
+  // void setStatus(String status) async {
+  //   await _fireStore.collection('user').doc(auth.currentUser!.uid).update({
+  //     "status": status,
+  //   });
+  // }
+  //
+  // void didChangeAppLifecycleState(AppLifecycleState state) {
+  //   if (state == AppLifecycleState.resumed) {
+  //     setStatus("Online");
+  //   } else {
+  //     setStatus("Offline");
+  //   }
+  // }
+
+
   @override
   void initState() {
     super.initState();
     homeCon.getSenderId();
+    // WidgetsBinding.instance.addObserver(this);
+    // setStatus("online");
   }
 
   @override
@@ -67,41 +88,55 @@ class _ChatsViewState extends State<ChatsView> {
                           .orderBy("datetime", descending: true).snapshots(),
                       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot)
                       {
-                        if (snapshot.connectionState == ConnectionState.waiting) {
-                          return Center(child: CircularProgressIndicator());
-                        } else if (snapshot.hasError) {
+                         if (snapshot.hasError) {
                           return Center(child: Text('Error: ${snapshot.error}'));
                         } else if (snapshot.hasData && snapshot.data!.docs.isNotEmpty) {
                           return ListView(
                             reverse: true,
                             children: snapshot.data!.docs.map((document) {
-                              if (homeCon.senderId.value == document["senderId"].toString()) {
-                                return Align(
-                                  alignment: Alignment.centerRight,
-                                  child: Container(
-                                    margin: EdgeInsets.all(10.0),
-                                    padding: EdgeInsets.all(10.0),
-                                    child: (document["type"]=="image")?Image.network(document["message"].toString(),width: 200,):Text(document["message"].toString(),style: TextStyle(color: Colors.white),),
-                                    decoration: BoxDecoration(
-                                        color: Color(0xff15c0ab),
-                                        borderRadius: BorderRadius.circular(15.0)
-                                    ),
+                              final isSender = homeCon.senderId.value == document["senderId"].toString();
+                              return Align(
+                                alignment: isSender ? Alignment.centerRight : Alignment.centerLeft,
+                                child: Container(
+                                  margin: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
+                                  padding: EdgeInsets.all(10.0),
+                                  constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.7),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [(document["type"] == "image") ? Image.network(document["message"].toString(), width: 200, height: 200,)
+                                          : Text(document["message"].toString(), style: TextStyle(color: Colors.black),),
+                                      SizedBox(height: 5.0),
+                                      Text(chatsCon.getTimeDifferenceString(int.parse(document["datetime"].toString())),
+                                        style: TextStyle(fontSize: 10, color: Colors.grey),
+                                      ),
+                                    ],
                                   ),
-                                );
-                              } else {
-                                return Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: Container(
-                                    margin: EdgeInsets.all(10.0),
-                                    padding: EdgeInsets.all(10.0),
-                                    child:  (document["type"]=="image")?Image.network(document["message"].toString(),width: 200,):Text(document["message"].toString(),style: TextStyle(color: Colors.white),),
-                                    decoration: BoxDecoration(
-                                        color: Colors.grey,
-                                        borderRadius: BorderRadius.circular(10.0)
+                                  decoration: BoxDecoration(
+                                    color: isSender ? Color(0xffDCF8C6) : Colors.white,
+                                    borderRadius: isSender
+                                        ? BorderRadius.only(
+                                      topLeft: Radius.circular(15.0),
+                                      topRight: Radius.circular(15.0),
+                                      bottomLeft: Radius.circular(15.0),
+                                      bottomRight: Radius.circular(5.0),
+                                    )
+                                        : BorderRadius.only(
+                                      topLeft: Radius.circular(15.0),
+                                      topRight: Radius.circular(15.0),
+                                      bottomLeft: Radius.circular(5.0),
+                                      bottomRight: Radius.circular(15.0),
                                     ),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.grey.withOpacity(0.5),
+                                        spreadRadius: 1,
+                                        blurRadius: 2,
+                                        offset: Offset(0, 1),
+                                      ),
+                                    ],
                                   ),
-                                );
-                              }
+                                ),
+                              );
                             }).toList(),
                           );
                         } else {
@@ -145,11 +180,9 @@ class _ChatsViewState extends State<ChatsView> {
                                             final picker = ImagePicker();
                                             final XFile? photo = await picker.pickImage(source: ImageSource.camera);
                                             if (photo == null) return;
-
                                             setState(() {
                                               chatsCon.isLoading.value = true;
                                             });
-
                                             File selectedFile = File(photo.path);
                                             var id = DateTime.now().microsecondsSinceEpoch.toString();
                                             try {
@@ -202,18 +235,12 @@ class _ChatsViewState extends State<ChatsView> {
                                               setState(() {
                                                 chatsCon.isLoading.value = true;
                                               });
-
                                               File selectedFile = File(photo.path);
                                               var id = DateTime.now().microsecondsSinceEpoch.toString();
-
-                                              // Upload image to Firebase Storage
                                               TaskSnapshot uploadTask = await FirebaseStorage.instance
                                                   .ref('photos$id')
                                                   .putFile(selectedFile);
-
                                               String imageUrl = await uploadTask.ref.getDownloadURL();
-
-                                              // Add image reference to Firestore
                                               await FirebaseFirestore.instance
                                                   .collection("user")
                                                   .doc(homeCon.senderId.value)
@@ -280,7 +307,7 @@ class _ChatsViewState extends State<ChatsView> {
                                 "message":message,
                                 "type":"text",
                                 "datetime":DateTime.now().millisecondsSinceEpoch,
-                                "timestamp":Timestamp
+                                // "timestamp":Timestamp
                               }).then((value) async{
                                 await FirebaseFirestore.instance.collection("user").doc(chatsCon.receiverId.value)
                                     .collection("chats").doc(homeCon.senderId.value).collection("message").add({
@@ -289,7 +316,7 @@ class _ChatsViewState extends State<ChatsView> {
                                   "message":message,
                                   "type":"text",
                                   "datetime":DateTime.now().millisecondsSinceEpoch,
-                                  "timestamp":Timestamp
+                                  // "timestamp":Timestamp
                                 }).then((value) async
                                 {
                                   await chatsCon.api.sendPushNotification(
@@ -308,7 +335,6 @@ class _ChatsViewState extends State<ChatsView> {
                                 );
                               });
                             }
-
                         },
                         color: Colors.green,
                         textColor: Colors.white,

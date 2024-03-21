@@ -113,20 +113,21 @@ class _HomeViewState extends State<HomeView> {
                               ),
                               title: Text(document["name"].toString()),
                               subtitle: Text(document["email"].toString()),
+
                               onTap: () {
                                 var name = document["name"].toString();
                                 var email = document["email"].toString();
                                 var photo = document["photo"].toString();
                                 var token = document["token"].toString();
-                               // var online = document["online"].toString();
+                                //var status = document["Unavailable"].toString();
                                // print("MyToken--------"+token);
                                 Get.to(() => ChatsView(), arguments: {
                                   'name': name,
                                   'email': email,
                                   'photo': photo,
                                   'token':token,
-                                 // 'user':online,
                                   'receiverId':document.id.toString(),
+                                  //'Unavailable':status
                                 });
                               },
                             );

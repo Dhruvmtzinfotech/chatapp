@@ -1,4 +1,3 @@
-import 'package:chatapp/moduls/login/view/phone_view.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -18,14 +17,15 @@ class LoginView extends StatefulWidget {
 }
 
 class _LoginViewState extends State<LoginView> {
+
   LoginController loginCon = Get.put(LoginController());
   final FirebaseAuth auth = FirebaseAuth.instance;
-  bool online = true;
 
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height * 100;
     double width = MediaQuery.of(context).size.width * 100;
+
     return Scaffold(
       appBar: AppBar(title: Text("LoginView"),),
       body: SafeArea(
@@ -45,13 +45,15 @@ class _LoginViewState extends State<LoginView> {
                         TextFormField(
                           controller: loginCon.email,
                           keyboardType: TextInputType.emailAddress,
-                          decoration: AppTheme.customDecoration("Enter Email",Icons.email),
+                          decoration: AppTheme.customDecoration(
+                              "Enter Email", Icons.email),
                         ),
                         SizedBox(height: 20,),
                         TextFormField(
                           controller: loginCon.password,
                           obscureText: loginCon.passwordVisible.value,
-                          decoration: AppTheme.customDecoration("Enter the password",Icons.lock
+                          decoration: AppTheme.customDecoration(
+                              "Enter the password", Icons.lock
                           ).copyWith(
                             suffixIcon: InkWell(
                               onTap: () {
@@ -68,9 +70,8 @@ class _LoginViewState extends State<LoginView> {
                           //validator: loginCon.customPasswordValidation,
                         ),
                         Align(alignment: Alignment.centerRight,
-                          child: GestureDetector(onTap: (){
-                          },
-                            child: Text("Forgot Password?",style: TextStyle(
+                          child: GestureDetector(onTap: () {},
+                            child: Text("Forgot Password?", style: TextStyle(
                               color: Colors.grey,
                               fontSize: 15.0,
                               fontWeight: FontWeight.w500,
@@ -78,32 +79,32 @@ class _LoginViewState extends State<LoginView> {
                           ),
                         ),
                         SizedBox(height: 20,),
-                        Button(btnText: "Login", onClick: () async{
-                         // if(loginCon.email.text.isEmpty || loginCon.password.text.isEmpty){
-                         //   AppTheme.getSnackBar(message: "Enter Reqiured Field");
-                         // }
-                         // else{
-                         //  await loginCon.api.getUserLogin(
-                         //    email:loginCon.email.text,
-                         //    password: loginCon.password.text,
-                         //  )!.then((value) async{
-                         //    if(loginCon.isLogin.value = true)
-                         //      {
-                         //        AppTheme.getSnackBar(message: value['message']);
-                         //        SharedPreferences prefs = await SharedPreferences.getInstance();
-                         //        prefs.setString('isLogin','yes');
-                         //      }
-                         //    else
-                         //      {
-                         //        AppTheme.getSnackBar(message: value['message']);
-                         //      }
-                         //    loginCon.email.clear();
-                         //    loginCon.password.clear();
-                         //    Get.back();
-                         //    Get.offAllNamed(Routes.home);
-                         //  });
-                         //
-                         // }
+                        Button(btnText: "Login", onClick: () async {
+                          // if(loginCon.email.text.isEmpty || loginCon.password.text.isEmpty){
+                          //   AppTheme.getSnackBar(message: "Enter Reqiured Field");
+                          // }
+                          // else{
+                          //  await loginCon.api.getUserLogin(
+                          //    email:loginCon.email.text,
+                          //    password: loginCon.password.text,
+                          //  )!.then((value) async{
+                          //    if(loginCon.isLogin.value = true)
+                          //      {
+                          //        AppTheme.getSnackBar(message: value['message']);
+                          //        SharedPreferences prefs = await SharedPreferences.getInstance();
+                          //        prefs.setString('isLogin','yes');
+                          //      }
+                          //    else
+                          //      {
+                          //        AppTheme.getSnackBar(message: value['message']);
+                          //      }
+                          //    loginCon.email.clear();
+                          //    loginCon.password.clear();
+                          //    Get.back();
+                          //    Get.offAllNamed(Routes.home);
+                          //  });
+                          //
+                          // }
 
                         }),
                         SizedBox(height: 20,),
@@ -117,10 +118,10 @@ class _LoginViewState extends State<LoginView> {
                             final AuthCredential authCredential = GoogleAuthProvider.credential(
                                 idToken: googleSignInAuthentication.idToken,
                                 accessToken: googleSignInAuthentication.accessToken);
-          
+
                             UserCredential result = await auth.signInWithCredential(authCredential);
                             User user = result.user!;
-          
+
                             var name = user.displayName.toString();
                             var email = user.email.toString();
                             var photo = user.photoURL.toString();
@@ -131,36 +132,34 @@ class _LoginViewState extends State<LoginView> {
                             prefs.setString("email", email);
                             prefs.setString("photo", photo);
 
-                            await FirebaseFirestore.instance.collection('user').where("email",isEqualTo: email).get().then((documents) async{
-                              if(documents.size <= 0)
-                                {
-                              await FirebaseFirestore.instance.collection('user').add({
-                              "name":name,
-                              "email":email,
-                              "photo":photo,
-                                "token":prefs.getString("token").toString(),
-                                // "online":false
-                              }).then((documents) async{
-                                SharedPreferences prefs = await SharedPreferences.getInstance();
-                                prefs.setString("senderId", documents.id.toString());
-                                print("senderId${documents.id.toString()}");
+                            await FirebaseFirestore.instance.collection('user').where("email", isEqualTo: email).get().then((documents) async {
+                              if (documents.size <= 0) {
+                                await FirebaseFirestore.instance.collection('user').add({
+                                  "name": name,
+                                  "email": email,
+                                  "photo": photo,
+                                  "token": prefs.getString("token").toString(),
+                                  //"status":"Unavailable",
+                                }).then((documents) async {
 
-                                Get.offAllNamed(Routes.home);
+                                  SharedPreferences prefs = await SharedPreferences.getInstance();
+                                  prefs.setString("senderId", documents.id.toString());
+                                  print("senderId${documents.id.toString()}");
 
-                              });
-                                }
-                              else
-                              {
+                                  Get.offAllNamed(Routes.home);
+                                });
+                              }
+                              else {
                                 SharedPreferences prefs = await SharedPreferences.getInstance();
                                 prefs.setString("senderId", documents.docs.first.id.toString());
 
-                                  Get.offAllNamed(Routes.home);
-                                }
+                                Get.offAllNamed(Routes.home);
+                              }
                             });
                           }
                         },
                           child: Container(
-                            width:width * 80,
+                            width: width * 80,
                             decoration: BoxDecoration(
                               color: Colors.grey.shade200,
                               borderRadius: BorderRadius.circular(20.0),
@@ -171,7 +170,7 @@ class _LoginViewState extends State<LoginView> {
                                   padding: const EdgeInsets.all(15.0),
                                   child: Image.asset("assets/img/Google.jpg"),
                                 ),
-                                Text("Continue with Google",style: TextStyle(
+                                Text("Continue with Google", style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 20.0,
                                 )),

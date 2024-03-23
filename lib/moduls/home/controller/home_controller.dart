@@ -8,7 +8,7 @@ class HomeController extends GetxController {
   RxString photo = "".obs;
   RxString userPhone = "".obs;
   RxString role ="".obs;
-
+  bool online = false;
 
   googleData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();

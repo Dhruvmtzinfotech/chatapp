@@ -110,8 +110,7 @@ class _LoginViewState extends State<LoginView> {
                         SizedBox(height: 20,),
                         GestureDetector(onTap: () async {
                           final GoogleSignIn googleSignIn = GoogleSignIn();
-                          final GoogleSignInAccount? googleSignInAccount = await googleSignIn
-                              .signIn();
+                          final GoogleSignInAccount? googleSignInAccount = await googleSignIn.signIn();
                           if (googleSignInAccount != null) {
                             final GoogleSignInAuthentication googleSignInAuthentication =
                             await googleSignInAccount.authentication;
@@ -138,14 +137,14 @@ class _LoginViewState extends State<LoginView> {
                                   "name": name,
                                   "email": email,
                                   "photo": photo,
+                                  "isTyping":loginCon.isTyping.value,
+                                  "status":loginCon.isStatus.value,
                                   "token": prefs.getString("token").toString(),
-                                  //"status":"Unavailable",
                                 }).then((documents) async {
 
                                   SharedPreferences prefs = await SharedPreferences.getInstance();
                                   prefs.setString("senderId", documents.id.toString());
                                   print("senderId${documents.id.toString()}");
-
                                   Get.offAllNamed(Routes.home);
                                 });
                               }
@@ -154,6 +153,7 @@ class _LoginViewState extends State<LoginView> {
                                 prefs.setString("senderId", documents.docs.first.id.toString());
 
                                 Get.offAllNamed(Routes.home);
+
                               }
                             });
                           }

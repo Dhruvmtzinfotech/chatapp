@@ -23,7 +23,6 @@ class MessagingService {
     debugPrint('User granted notifications permission: ${settings.authorizationStatus}');
     fcmToken = await _fcm.getToken();
     log("fcmToken-----------------${fcmToken}");
-   //fcmToken-----------------fPxL47CoR4SH4phlp-95OD:APA91bFGArpWIobwzz3nEKSWDJKWb9vPiH3XMJY3UIQYmD8BlrNZBhOgr7uT-hQHnTbaMVDk3xX8svHPPsZXo0gPto-adHnH8cuvuL9NhZb951IW0WTQhWkqbLqXRRlih-aXixaoBFgg
 
     FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {

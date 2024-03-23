@@ -68,9 +68,7 @@ class Api{
         'Content-Type': 'application/json',
         'Authorization': 'Bearer AAAAKZ9-00w:APA91bG60aXsIIJSQhTfC1-aUctV6JNj4LR280H4GDyNgnnsrwItJXfCSR1sO7Ao7E_sZKXpw5n21-oyZn7FP3KamOt2mTdZK2V4dWun7jOR8W3eaEx1Hsw_nc9VQ8RK4tA7M_6w0Tko'
       };
-      var response = await dio.post('https://fcm.googleapis.com/fcm/send',
-        data: requestBody,
-        options: Options(headers: headers),
+      var response = await dio.post('https://fcm.googleapis.com/fcm/send',data: requestBody,options: Options(headers: headers),
       );
 
       if(response.statusCode == 200 || response.statusCode == 201) {
@@ -84,32 +82,6 @@ class Api{
     }
   }
 
-  // String getTimeDifferenceString(int timestamp) {
-  //   DateTime now = DateTime.now();
-  //   DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(timestamp);
-  //
-  //   Duration difference = now.difference(dateTime);
-  //   if (difference.inSeconds < 60) {
-  //     return 'Just now';
-  //   } else if (difference.inMinutes < 2) {
-  //     return '1 min ago';
-  //   } else if (difference.inDays < 31) {
-  //     return '${difference.inDays} days ago';
-  //   } else {
-  //     DateFormat formatter = DateFormat('DD MMM yyyy');
-  //     return formatter.format(dateTime);
-  //   }
-  // }
-
-  // void main() {
-  //   int timestampJustNow = DateTime.now().millisecondsSinceEpoch;
-  //   int timestamp1MinAgo = DateTime.now().subtract(Duration(minutes: 1)).millisecondsSinceEpoch;
-  //   int timestamp1MonthAgo = DateTime.now().subtract(Duration(days: 30)).millisecondsSinceEpoch;
-  //
-  //   print(getTimeDifferenceString(timestampJustNow));
-  //   print(getTimeDifferenceString(timestamp1MinAgo));
-  //   print(getTimeDifferenceString(timestamp1MonthAgo));
-  // }
 
 
   // Online/Offline

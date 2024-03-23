@@ -36,7 +36,7 @@ class Routes {
         name: Routes.chats,
         page: () => ChatsView(),
         binding: ChatsBinding(),
-      )
+      ),
 
     ];
   }

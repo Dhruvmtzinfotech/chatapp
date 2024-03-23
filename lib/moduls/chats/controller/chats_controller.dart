@@ -15,6 +15,7 @@ class ChatsController extends GetxController {
 
   RxBool isLoading = false.obs;
   RxBool emojiShowing = false.obs;
+  RxBool isTyping = false.obs;
 
   String profileUrl = '';
   void updateProfileUrl(String newUrl) {
@@ -40,29 +41,6 @@ class ChatsController extends GetxController {
     //status.value = arguments['status'];
   }
 
-  // String getTimeDifferenceString(int timestamp) {
-  //   DateTime now = DateTime.now();
-  //   DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(timestamp);
-  //
-  //   Duration difference = now.difference(dateTime);
-  //   if (difference.inSeconds < 60) {
-  //     return 'Just now';
-  //   } else if (difference.inMinutes < 60) {
-  //     return '${difference.inMinutes} min ago';
-  //   } else if (difference.inHours < 24) {
-  //     return '${difference.inHours} hr ago';
-  //   } else if (difference.inDays < 7) {
-  //     return '${difference.inDays} days ago';
-  //   } else if (difference.inDays < 365) {
-  //     DateFormat formatter = DateFormat('E');
-  //     String dayOfWeek = formatter.format(dateTime);
-  //     return '$dayOfWeek, ${DateFormat('h:mm a').format(dateTime)}';
-  //   } else {
-  //     DateFormat formatter = DateFormat('MMM d');
-  //     return formatter.format(dateTime);
-  //   }
-  // }
-
   String getTimeDifferenceString(int timestamp) {
     DateTime now = DateTime.now();
     DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(timestamp);
@@ -81,11 +59,6 @@ class ChatsController extends GetxController {
       return formatter.format(dateTime);
     }
   }
-
-
-
-
-
 
 }
 

@@ -24,7 +24,9 @@ class LoginController extends GetxController {
   Api api = Api();
 
   RxBool isLogin = false.obs;
-  RxBool status = false.obs;
+  RxBool isStatus = false.obs;
+  RxBool isTyping = false.obs;
+
 
 
   final GlobalKey<FormState> loginKey = GlobalKey<FormState>();

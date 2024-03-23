@@ -7,6 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../../../typingindicator/typingindicator.dart';
+
 
 class ChatsView extends StatefulWidget {
   const ChatsView({super.key});
@@ -20,6 +22,8 @@ class _ChatsViewState extends State<ChatsView> with WidgetsBindingObserver{
   ChatsController chatsCon = Get.put(ChatsController());
   final ImagePicker picker = ImagePicker();
   File? selectedFile;
+  bool _isTyping = false;
+
 
 
   // final FirebaseAuth auth = FirebaseAuth.instance;
@@ -51,7 +55,11 @@ class _ChatsViewState extends State<ChatsView> with WidgetsBindingObserver{
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    //height: size.height / 20,
+    //width: size.height / 20,
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       body: SafeArea(
           child: Container(
             width: MediaQuery.of(context).size.width,
@@ -103,7 +111,7 @@ class _ChatsViewState extends State<ChatsView> with WidgetsBindingObserver{
                                   constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.7),
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [(document["type"] == "image") ? Image.network(document["message"].toString(), width: 200, height: 200,)
+                                    children: [(document["type"] == "image") ? Image.network(document["message"].toString(), width: size.width /2, height:size.height/2)
                                           : Text(document["message"].toString(), style: TextStyle(color: Colors.black),),
                                       SizedBox(height: 5.0),
                                       Text(chatsCon.getTimeDifferenceString(int.parse(document["datetime"].toString())),
@@ -158,18 +166,23 @@ class _ChatsViewState extends State<ChatsView> with WidgetsBindingObserver{
                             child: Column(
                               children: [
                                 TextField(
+                                  onChanged: (text){
+                                    setState(() {
+                                      _isTyping = text.isNotEmpty;
+                                    });
+                                  },
                                   controller: chatsCon.messageController,
                                   scrollController: chatsCon.scrollController,
                                   decoration: InputDecoration(
                                     border: InputBorder.none,
                                     hintText: 'Type a Message',
-                                    prefixIcon: GestureDetector(
-                                        onTap: () async{
-                                          setState(() {
-                                            chatsCon.emojiShowing.value = !chatsCon.emojiShowing.value;
-                                          });
-                                        },
-                                        child: Icon(Icons.emoji_emotions_outlined)),
+                                    // prefixIcon: GestureDetector(
+                                    //     onTap: () async{
+                                    //       setState(() {
+                                    //         chatsCon.emojiShowing.value = !chatsCon.emojiShowing.value;
+                                    //       });
+                                    //     },
+                                    //     child: Icon(Icons.emoji_emotions_outlined)),
                                     suffixIcon: Row(
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       mainAxisSize: MainAxisSize.min,
@@ -187,7 +200,7 @@ class _ChatsViewState extends State<ChatsView> with WidgetsBindingObserver{
                                             var id = DateTime.now().microsecondsSinceEpoch.toString();
                                             try {
                                               TaskSnapshot uploadTask = await FirebaseStorage.instance
-                                                  .ref('camera/camera$id') // Folder nam  ed "images"
+                                                  .ref('camera/camera$id') // Folder named "images"
                                                   .putFile(selectedFile);
                                               String imageUrl = await uploadTask.ref.getDownloadURL();
                                               await FirebaseFirestore.instance
@@ -231,14 +244,13 @@ class _ChatsViewState extends State<ChatsView> with WidgetsBindingObserver{
                                             try {
                                               final XFile? photo = await picker.pickImage(source: ImageSource.gallery);
                                               if (photo == null) return;
-
                                               setState(() {
                                                 chatsCon.isLoading.value = true;
                                               });
                                               File selectedFile = File(photo.path);
                                               var id = DateTime.now().microsecondsSinceEpoch.toString();
                                               TaskSnapshot uploadTask = await FirebaseStorage.instance
-                                                  .ref('photos$id')
+                                                  .ref('photos/photos$id')
                                                   .putFile(selectedFile);
                                               String imageUrl = await uploadTask.ref.getDownloadURL();
                                               await FirebaseFirestore.instance
@@ -254,7 +266,6 @@ class _ChatsViewState extends State<ChatsView> with WidgetsBindingObserver{
                                                 "type": "image",
                                                 "datetime": DateTime.now().millisecondsSinceEpoch
                                               });
-
                                               await FirebaseFirestore.instance
                                                   .collection("user")
                                                   .doc(chatsCon.receiverId.value)
@@ -268,7 +279,6 @@ class _ChatsViewState extends State<ChatsView> with WidgetsBindingObserver{
                                                 "type": "image",
                                                 "datetime": DateTime.now().millisecondsSinceEpoch
                                               });
-
                                               setState(() {
                                                 chatsCon.isLoading.value = false;
                                               });
@@ -283,6 +293,7 @@ class _ChatsViewState extends State<ChatsView> with WidgetsBindingObserver{
                                       ],
                                     ),
                                   ),
+                                  cursorColor: Colors.grey
                                 ),
                               ],
                             ),
@@ -301,7 +312,7 @@ class _ChatsViewState extends State<ChatsView> with WidgetsBindingObserver{
                                 duration: const Duration(milliseconds: 1),
                               );
                               await FirebaseFirestore.instance.collection("user").doc(homeCon.senderId.value)
-                                  .collection("chats").doc(chatsCon.receiverId.value).collection("message").add({
+                                .collection("chats").doc(chatsCon.receiverId.value).collection("message").add({
                                 "senderId":homeCon.senderId.value,
                                 "receiverId":chatsCon.receiverId.value,
                                 "message":message,
@@ -338,31 +349,14 @@ class _ChatsViewState extends State<ChatsView> with WidgetsBindingObserver{
                         },
                         color: Colors.green,
                         textColor: Colors.white,
+                        elevation: 10,
                         child: Icon(Icons.send, size: 24),
                         padding: EdgeInsets.all(15),
                         shape: CircleBorder(),
                       ),
-                      // Expanded(
-                      //   child: Offstage(
-                      //     offstage: !chatsCon.emojiShowing.value,
-                      //     child: SizedBox(
-                      //       height: 200,
-                      //       child: EmojiPicker(
-                      //         textEditingController: chatsCon.messageController,
-                      //         scrollController: chatsCon.scrollController,
-                      //         config: Config(
-                      //           height: 256,
-                      //           checkPlatformCompatibility: true,
-                      //           swapCategoryAndBottomBar: false,
-                      //           skinToneConfig: SkinToneConfig(),
-                      //           categoryViewConfig: CategoryViewConfig(),
-                      //           bottomActionBarConfig: BottomActionBarConfig(),
-                      //           searchViewConfig: SearchViewConfig(),
-                      //         ),
-                      //       ),
-                      //     ),
-                      //   ),
-                      // ),
+                      TypingIndicator(
+                        showIndicator: _isTyping,
+                      ),
                     ],
                   ),
                 ],
